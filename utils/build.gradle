@@ -13,3 +13,6 @@ dependencies {
     implementation 'com.google.guava:guava:29.0-jre'
     implementation "org.bouncycastle:bcprov-jdk15on:1.60"
 }
+
+apply plugin: 'com.github.dcendents.android-maven' // 添加这个
+group = 'com.github.hyhyhykw'    // 指定group，com.github.<用户名>
