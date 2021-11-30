@@ -110,6 +110,14 @@ public class ApiWrapper {
         keyPair = new KeyPair(hexPrivateKey);
     }
 
+    public ApiWrapper(String grpcEndpoint, String grpcEndpointSolidity, KeyPair keyPair) {
+        channel = ManagedChannelBuilder.forTarget(grpcEndpoint).usePlaintext().build();
+        channelSolidity = ManagedChannelBuilder.forTarget(grpcEndpointSolidity).usePlaintext().build();
+        blockingStub = WalletGrpc.newBlockingStub(channel);
+        blockingStubSolidity = WalletSolidityGrpc.newBlockingStub(channelSolidity);
+        this.keyPair=keyPair;
+    }
+
     public ApiWrapper(String grpcEndpoint, String grpcEndpointSolidity, String hexPrivateKey, String apiKey) {
         channel = ManagedChannelBuilder.forTarget(grpcEndpoint).usePlaintext().build();
         channelSolidity = ManagedChannelBuilder.forTarget(grpcEndpointSolidity).usePlaintext().build();
@@ -123,6 +131,21 @@ public class ApiWrapper {
         blockingStubSolidity = (WalletSolidityGrpc.WalletSolidityBlockingStub)MetadataUtils.attachHeaders(WalletSolidityGrpc.newBlockingStub(channelSolidity), header);
 
         keyPair = new KeyPair(hexPrivateKey);
+    }
+
+    public ApiWrapper(String grpcEndpoint, String grpcEndpointSolidity, String apiKey,KeyPair keyPair) {
+        channel = ManagedChannelBuilder.forTarget(grpcEndpoint).usePlaintext().build();
+        channelSolidity = ManagedChannelBuilder.forTarget(grpcEndpointSolidity).usePlaintext().build();
+
+        //attach api key
+        Metadata header = new Metadata();
+        Metadata.Key<String> key = Metadata.Key.of("TRON-PRO-API-KEY", Metadata.ASCII_STRING_MARSHALLER);
+        header.put(key, apiKey);
+
+        blockingStub = (WalletGrpc.WalletBlockingStub)MetadataUtils.attachHeaders(WalletGrpc.newBlockingStub(channel), header);
+        blockingStubSolidity = (WalletSolidityGrpc.WalletSolidityBlockingStub)MetadataUtils.attachHeaders(WalletSolidityGrpc.newBlockingStub(channelSolidity), header);
+
+        this.keyPair=keyPair;
     }
 
     public void close() {
@@ -147,12 +170,21 @@ public class ApiWrapper {
     }
 
     /**
+     * The constuctor for main net. Use TronGrid as default
+     * @param apiKey this function works with TronGrid, an API key is required.
+     * @param keyPair keypair
+     * @return a ApiWrapper object
+     */
+    public static ApiWrapper ofMainnet(String apiKey,KeyPair keyPair){
+        return new ApiWrapper(Constant.TRONGRID_MAIN_NET, Constant.TRONGRID_MAIN_NET_SOLIDITY, apiKey,keyPair);
+    }
+
+    /**
      * The constuctor for main net.
      * @deprecated 
      * This method will only be available before TronGrid prohibits the use without API key
      * 
      * @param hexPrivateKey the binding private key. Operations require private key will all use this unless the private key is specified elsewhere.
-     * @param apiKey this function works with TronGrid, an API key is required.
      * @return a ApiWrapper object
      */
     @Deprecated
@@ -163,11 +195,18 @@ public class ApiWrapper {
     /**
      * The constuctor for Shasta test net. Use TronGrid as default.
      * @param hexPrivateKey the binding private key. Operations require private key will all use this unless the private key is specified elsewhere.
-     * @param apiKey this function works with TronGrid, an API key is required.
      * @return a ApiWrapper object
      */
     public static ApiWrapper ofShasta(String hexPrivateKey) {
         return new ApiWrapper(Constant.TRONGRID_SHASTA, Constant.TRONGRID_SHASTA_SOLIDITY, hexPrivateKey);
+    }
+    /**
+     * The constuctor for Shasta test net. Use TronGrid as default.
+     * @param keyPair the binding private key. Operations require private key will all use this unless the private key is specified elsewhere.
+     * @return a ApiWrapper object
+     */
+    public static ApiWrapper ofShasta(KeyPair keyPair) {
+        return new ApiWrapper(Constant.TRONGRID_SHASTA, Constant.TRONGRID_SHASTA_SOLIDITY, keyPair);
     }
 
     /**
@@ -179,6 +218,14 @@ public class ApiWrapper {
         return new ApiWrapper(Constant.FULLNODE_NILE, Constant.FULLNODE_NILE_SOLIDITY, hexPrivateKey);
     }
 
+    /**
+     * The constuctor for Nile test net.
+     * @param keyPair the binding private key. Operations require private key will all use this unless the private key is specified elsewhere.
+     * @return a ApiWrapper object
+     */
+    public static ApiWrapper ofNile(KeyPair keyPair) {
+        return new ApiWrapper(Constant.FULLNODE_NILE, Constant.FULLNODE_NILE_SOLIDITY, keyPair);
+    }
     /**
      * Generate random address
      * @return A list, inside are the public key and private key
