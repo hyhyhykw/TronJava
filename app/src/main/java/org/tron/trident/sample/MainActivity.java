@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import org.tron.trident.abi.datatypes.Address;
+import org.tron.trident.proto.Contract;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override

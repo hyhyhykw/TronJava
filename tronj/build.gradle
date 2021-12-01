@@ -37,12 +37,13 @@ android {
 dependencies {
 
     // protobuf & grpc
-    implementation 'com.google.protobuf:protobuf-java:3.11.0'
+    implementation 'com.google.protobuf:protobuf-java:3.12.0'
 
-    implementation 'io.grpc:grpc-netty-shaded:1.31.0'
-    implementation 'io.grpc:grpc-netty:1.31.0'
-    implementation 'io.grpc:grpc-protobuf:1.31.0'
-    implementation 'io.grpc:grpc-stub:1.31.0'
+    implementation 'io.grpc:grpc-netty-shaded:1.34.0'
+    implementation 'io.grpc:grpc-netty:1.34.0'
+
+    implementation 'io.grpc:grpc-protobuf:1.34.0'
+    implementation 'io.grpc:grpc-stub:1.34.0'
 
     implementation "org.bouncycastle:bcprov-jdk15on:1.60"
     api project(':abi')

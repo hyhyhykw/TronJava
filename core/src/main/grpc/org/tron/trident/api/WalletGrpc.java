@@ -18,7 +18,7 @@ import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 /**
  */
 @javax.annotation.Generated(
-    value = "by gRPC proto compiler (version 1.31.0)",
+    value = "by gRPC proto compiler (version 1.34.0)",
     comments = "Source: api/api.proto")
 public final class WalletGrpc {
 
